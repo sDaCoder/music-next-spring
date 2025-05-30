@@ -8,7 +8,7 @@ import Image from 'next/image'
 
 const PlayerArea = () => {
 
-    const [play, { pause, duration, sound }] = useSound('/demo-song.mp3')
+    const [play, { pause }] = useSound('/demo-song.mp3')
     const [isPlaying, setIsPlaying] = useState<boolean>(false)
 
     const playButton = () => {
