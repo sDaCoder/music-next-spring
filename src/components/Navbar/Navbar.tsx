@@ -29,11 +29,12 @@ const Navbar: React.FC = () => {
                         <Button 
                             onClick={() => setTheme(theme === 'light' ? 'dark' : 'light')}
                             variant={'outline'}
-                            className='rounded-full'
+                            className='rounded-full p-2'
                         >
                             {theme === 'light' ? <Sun /> : <Moon />}
                         </Button>
                     )}
+                    
                 </div>
             </nav>
         </>
