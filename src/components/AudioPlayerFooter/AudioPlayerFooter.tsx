@@ -119,8 +119,14 @@ const AudioPlayerFooter: React.FC<AudioPlayerFooterProps> = ({ currentSongId }) 
                                 <Button
                                     className='rounded-full py-6'
                                     onClick={() => {
-                                        isPlaying ? audioRef.current?.pause() : audioRef.current?.play()
-                                        setIsPlaying(!isPlaying)
+                                        if (audioRef.current) {
+                                            if (isPlaying) {
+                                                audioRef.current.pause();
+                                            } else {
+                                                audioRef.current.play();
+                                            }
+                                        }
+                                        setIsPlaying(!isPlaying);
                                     }}
                                 >
                                     {isPlaying ? <Pause /> : <Play />}

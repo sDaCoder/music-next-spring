@@ -28,6 +28,7 @@ const PlayerFooter: React.FC<PlayerFooterProps> = ({currentSongId}) => {
                 console.log(res.data.fileUrl);
             } catch (error) {
                 setCurrentSong('')
+                console.log(error);
             } finally {
                 setLoading(false)
             }
