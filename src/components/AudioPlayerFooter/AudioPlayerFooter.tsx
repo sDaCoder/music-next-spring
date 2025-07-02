@@ -17,7 +17,7 @@ const formatTime = (time: number) => {
     return `${minutes}:${seconds.toString().padStart(2, '0')}`;
 };
 
-interface Song {
+interface SongType {
     songId: string,
     title: string,
     durationSeconds: number,
@@ -39,9 +39,9 @@ const AudioPlayerFooter: React.FC<AudioPlayerFooterProps> = ({ currentSongId }) 
     const [volume, setVolume] = useState<number>(0.5);
     const [currentTime, setCurrentTime] = useState<number>(0);
     const [duration, setDuration] = useState<number>(0);
-    const [currentSong, setCurrentSong] = useState<Song | null>(null)
+    const [currentSong, setCurrentSong] = useState<SongType | null>(null)
 
-    const audioRef = useRef<HTMLAudioElement>(null);
+    const audioRef = useRef<HTMLAudioElement | null>(null);
 
     useEffect(() => {
         const fetchSong = async () => {
@@ -129,7 +129,6 @@ const AudioPlayerFooter: React.FC<AudioPlayerFooterProps> = ({ currentSongId }) 
                                     <SkipForward />
                                 </Button>
                             </div>
-
                         </div>
 
                         <div>

@@ -6,9 +6,18 @@ import { Skeleton } from "@/components/ui/skeleton"
 import axios from "axios"
 import React, { useEffect, useState } from "react"
 
+interface SongType {
+    songId: string,
+    title: string,
+    durationSeconds: number,
+    fileUrl: string,
+    artistId: string,
+    albumId: string
+}
+
 const Page: React.FC = () => {
 
-    const [songsList, setSongsList] = useState<Array<any>>([])
+    const [songsList, setSongsList] = useState<SongType[]>([])
     const [currentSongId, setCurrentSongId] = useState<string>('')
     const [loading, setLoading] = useState<boolean>(true)
     useEffect(() => {
@@ -61,11 +70,10 @@ const Page: React.FC = () => {
                 }}
                     className="w-full max-w-[68vw]">
                     <CarouselContent>
-                        {songsList.map((song: any, index) => (
+                        {songsList.map((song: SongType, index) => (
                             <CarouselItem key={index} className="md:basis-1/3">
                                 <div className="p-1">
                                     <SongCard
-                                        index={index}
                                         setCurrentSongId={setCurrentSongId}
                                         songId={song.songId}
                                         songTitle={song.title}

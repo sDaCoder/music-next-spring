@@ -4,14 +4,12 @@ import Image from 'next/image'
 import { Button } from '../ui/button'
 
 interface SongCardProps { 
-    index: number,
     setCurrentSongId: React.Dispatch<React.SetStateAction<string>>,
     songId: string,
     songTitle: string,
 }
 
 const SongCard: React.FC<SongCardProps> = ({
-    index,
     setCurrentSongId, 
     songId, 
     songTitle
