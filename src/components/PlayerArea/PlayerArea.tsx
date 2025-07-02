@@ -5,10 +5,24 @@ import { Button } from '../ui/button'
 import { Pause, Play, SkipBack, SkipForward } from 'lucide-react'
 import useSound from 'use-sound'
 import Image from 'next/image'
+import { useParams } from 'next/navigation'
+import axios from 'axios'
 
 const PlayerArea = () => {
 
-    const [play, { pause, duration, sound }] = useSound('/demo-song.mp3')
+    const {songId} = useParams()
+    const [currentSong, setCurrentSong] = useState<string>('');
+
+    useEffect(() => {
+        const fetchSong = async () => {
+            const res = await axios.get(`http://localhost:8080/api/songs/${songId}`)
+            setCurrentSong(res.data.fileUrl);
+            console.log(res.data.fileUrl);
+        }
+        fetchSong()
+    }, [])
+
+    const [play, { pause, duration, sound }] = useSound(currentSong)
     const [isPlaying, setIsPlaying] = useState<boolean>(false)
     const [audioTime, setAudioTime] = useState<{ hr: number, min: number, sec: number }>({ hr: 0, min: 0, sec: 0 })
     const [seconds, setSeconds] = useState<number>(0)

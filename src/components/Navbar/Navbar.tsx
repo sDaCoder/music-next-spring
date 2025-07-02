@@ -1,9 +1,10 @@
 'use client'
-import { Activity, Moon, Sun } from 'lucide-react'
+import { Activity, Moon, Search, Sun } from 'lucide-react'
 import { useTheme } from 'next-themes'
 import React, { useEffect, useState } from 'react'
 import { Button } from '../ui/button'
 import { useRouter } from 'next/navigation'
+import { Input } from '../ui/input'
 
 const Navbar: React.FC = () => {
     const { theme, setTheme } = useTheme()
@@ -22,7 +23,16 @@ const Navbar: React.FC = () => {
                     onClick={() => router.push('/')}
                 >
                     <Activity />
-                    <h1 className='text-2xl font-bold'>sToones</h1>
+                    <h1 className='text-2xl font-bold'>Musix</h1>
+                </div>
+                <div className='md:flex items-center gap-3 hidden'>
+                    <Input
+                        className='w-[30vw] rounded-2xl px-6 py-4' 
+                        placeholder="What's in your mind?"
+                    />
+                    <Button variant={'outline'} className='rounded-full py-4'>
+                        <Search />
+                    </Button>
                 </div>
                 <div>
                     {mounted && (
