@@ -13,11 +13,10 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                .csrf(csrf -> csrf.disable())
-
+                .csrf(csrf -> csrf.disable()) // Disable CSRF for stateless REST APIs
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/songs/**").permitAll()
-                        .anyRequest().authenticated()
+                        // This is the key change: permit ALL requests to any URL
+                        .requestMatchers("/**").permitAll()
                 );
         return http.build();
     }

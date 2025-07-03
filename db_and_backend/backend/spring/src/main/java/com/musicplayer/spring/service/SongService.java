@@ -1,13 +1,9 @@
 package com.musicplayer.spring.service;
 
-import com.musicplayer.spring.model.ListeningHistory;
 import com.musicplayer.spring.model.Song;
-import com.musicplayer.spring.repository.ListeningHistoryRepository;
 import com.musicplayer.spring.repository.SongRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -32,5 +28,4 @@ public class SongService {
         }
         return songRepository.searchByTitle(title);
     }
-
 }
