@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -35,4 +36,18 @@ public class SongController {
     public List<Song> searchSongs(@RequestParam String title) {
         return songService.searchSongsByTitle(title);
     }
+
+    @GetMapping("/play/{id}")
+    public ResponseEntity<?> playSong(@PathVariable UUID id, Principal principal) {
+        Optional<Song> song = songService.getSongById(id); // or your logic
+        String username = principal.getName();   // Spring Security provides logged-in user
+
+        songService.recordListening(username, id);
+
+        return ResponseEntity.ok(song.get().getUrl()); // or however you play song
+
+    }
+
+
+
 }

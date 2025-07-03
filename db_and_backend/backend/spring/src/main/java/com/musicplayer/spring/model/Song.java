@@ -15,4 +15,12 @@ public class Song {
     private String fileUrl;
     private UUID artistId;
     private UUID albumId;
+
+    public Object getUrl() {
+        return fileUrl;
+    }
+
+    public Object getId() {
+        return songId;
+    }
 }
