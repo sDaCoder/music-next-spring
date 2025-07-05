@@ -5,7 +5,7 @@ import { Skeleton } from '@/components/ui/skeleton'
 import axios from 'axios'
 import React, { useEffect, useState } from 'react'
 
-const page = () => {
+const Page = () => {
 
     const [artists, setArtists] = useState<artistType[]>([])
     const [loading, setLoading] = useState<boolean>(false)
@@ -64,4 +64,4 @@ const page = () => {
     )
 }
 
-export default page
+export default Page
