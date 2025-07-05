@@ -1,5 +1,6 @@
 import AlbumsList from "@/components/AlbumsList/AlbumsList";
 import ArtistsList from "@/components/ArtistsList/ArtistsList";
+import GenresList from "@/components/GenresList/GenresList";
 
 const Home: React.FC = () => {
   return (
@@ -11,11 +12,11 @@ const Home: React.FC = () => {
       <Link href="/songs" className="text-3xl my-8 text-green-500 font-bold underline block text-center">
         Click me to open the songs list
       </Link> */}
-      <main className="container mx-auto px-6 space-y-8 py-4">
+      <main className="container mx-auto space-y-8 py-4 px-6">
         <AlbumsList />
         <ArtistsList />
+        <GenresList />
       </main>
-      {/* <section>This is the section for the Artists</section> */}
     </>
   );
 }

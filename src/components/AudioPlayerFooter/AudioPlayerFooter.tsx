@@ -141,6 +141,7 @@ const AudioPlayerFooter: React.FC<AudioPlayerFooterProps> = ({ currentSongId }) 
                             {/* <h1>Song Audio Controls</h1> */}
                             <div className="flex items-center gap-x-2">
                                 <Button
+                                    size={'icon'}
                                     variant={'outline'}
                                     className='rounded-full'
                                     onClick={() =>
@@ -160,7 +161,7 @@ const AudioPlayerFooter: React.FC<AudioPlayerFooterProps> = ({ currentSongId }) 
                                         setVolume(e[0])
                                     }}
                                 />
-                                <Button variant={'outline'} className='rounded-full'>
+                                <Button size={'icon'} variant={'outline'} className='rounded-full'>
                                     <Maximize2 />
                                 </Button>
                             </div>

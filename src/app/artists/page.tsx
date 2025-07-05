@@ -1,20 +1,12 @@
 "use client"
-import React, { useEffect, useState } from 'react'
-import { Button } from '../ui/button'
-import { Carousel, CarouselContent, CarouselItem } from '../ui/carousel'
+import ArtistCard from '@/components/ArtistCard/ArtistCard'
+import { artistType } from '@/components/ArtistsList/ArtistsList'
+import { Skeleton } from '@/components/ui/skeleton'
 import axios from 'axios'
-import ArtistCard from '../ArtistCard/ArtistCard'
-import { Skeleton } from '../ui/skeleton'
-import { useRouter } from 'next/navigation'
+import React, { useEffect, useState } from 'react'
 
-export interface artistType {
-    artistId: string,
-    name: string,
-    img: string
-}
+const page = () => {
 
-const ArtistsList = () => {
-    const router = useRouter()
     const [artists, setArtists] = useState<artistType[]>([])
     const [loading, setLoading] = useState<boolean>(false)
 
@@ -35,19 +27,15 @@ const ArtistsList = () => {
             fetchData();
         }, 2000);
     }, [])
-    
 
     return (
         <>
-            <section className="space-y-6">
+            <section className='container mx-auto px-6 py-4 space-y-4'>
 
                 <div className='flex justify-between items-center py-4'>
                     <div className='md:space-y-2'>
                         <h1 className='md:text-5xl text-3xl font-bold'>Popular Artists</h1>
                         <p className='text-xs'>All your favourite artists</p>
-                    </div>
-                    <div className='flex items-center gap-2'>
-                        <Button onClick={() => router.push('/artists')} variant={'ghost'}>View All</Button>
                     </div>
                 </div>
 
@@ -62,20 +50,18 @@ const ArtistsList = () => {
                     )
                 }
 
-                <Carousel className="w-full">
-                    <CarouselContent className="-ml-2 md:-ml-4">
+                <div className='w-full'>
+                    <div className='grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6'>
                         {artists.map((artist, index) => (
-                            <CarouselItem key={index} className="pl-2 md:pl-4 basis-full sm:basis-1/2 md:basis-1/3 lg:basis-1/4 xl:basis-1/6"
-                            >
-                                <ArtistCard artist={artist} />
-                            </CarouselItem>
+                            <ArtistCard key={index} artist={artist} />
                         ))}
-                    </CarouselContent>
-                </Carousel>
+                    </div>
+                </div>
+
 
             </section>
         </>
     )
 }
 
-export default ArtistsList
+export default page

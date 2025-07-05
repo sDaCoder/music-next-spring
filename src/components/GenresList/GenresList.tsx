@@ -3,27 +3,29 @@ import React, { useEffect, useState } from 'react'
 import { Carousel, CarouselContent, CarouselItem } from '../ui/carousel'
 import { Button } from '../ui/button'
 import axios from 'axios'
-import AlbumCard from '../AlbumCard/AlbumCard'
+import GenreCard, { bgColors } from '../GenreCard/GenreCard'
 import { Skeleton } from '../ui/skeleton'
 import { useRouter } from 'next/navigation'
 
-export interface AlbumType {
-    title: string,
-    coverArtUrl: string,
-    releaseDate: string,
-};
+export interface GenreType {
+    genreId: string
+    name: string
+    createdAt: Date
+}
 
-const AlbumsList = () => {
+const GenresList = () => {
+
+
     const router = useRouter()
-    const [albums, setAlbums] = useState<AlbumType[]>([]);
+    const [genres, setGenres] = useState<GenreType[]>([])
     const [loading, setLoading] = useState<boolean>(false)
 
     useEffect(() => {
         setLoading(true)
         const fetchData = async () => {
             try {
-                const response = await axios.get('http://localhost:8080/api/albums');
-                setAlbums(response.data);
+                const response = await axios.get('http://localhost:8080/api/genres');
+                setGenres(response.data);
                 console.log(response.data);
             } catch (error) {
                 console.error('Error fetching data:', error);
@@ -42,16 +44,11 @@ const AlbumsList = () => {
 
                 <div className='flex justify-between items-center py-4'>
                     <div className='md:space-y-2'>
-                        <h1 className='md:text-5xl text-3xl font-bold'>Top Albums</h1>
-                        <p className='text-xs'>List of songs made for you</p>
+                        <h1 className='md:text-5xl text-3xl font-bold'>Browse Genres</h1>
+                        <p className='text-xs'>Songs Categorised by genre</p>
                     </div>
                     <div className='flex items-center gap-2'>
-                        <Button 
-                            variant={'ghost'}
-                            onClick={() => router.push('/albums')}
-                        >
-                            View All
-                        </Button>
+                        <Button onClick={() => router.push('/genres')} variant={'ghost'}>View All</Button>
                     </div>
                 </div>
 
@@ -66,15 +63,17 @@ const AlbumsList = () => {
                     )
                 }
 
-                <Carousel className='w-full'>
+                <Carousel className="w-full">
                     <CarouselContent>
-                        {
-                            albums.map((album, index) => (
-                                <CarouselItem key={index} className='pl-2 md:pl-4 basis-full sm:basis-1/2 md:basis-1/3 lg:basis-1/4 xl:basis-1/5'>
-                                    <AlbumCard album={album} />
+                        {genres.map((genre, index) => {
+                            const randIndex = index % bgColors.length;
+                            
+                            return (
+                                <CarouselItem key={index} className="pl-2 md:pl-4 basis-full sm:basis-1/2 md:basis-1/3 lg:basis-1/4 xl:basis-1/6">
+                                    <GenreCard bgColorIndex={randIndex} genre={genre} />
                                 </CarouselItem>
-                            ))
-                        }
+                            )
+                        })}
                     </CarouselContent>
                 </Carousel>
             </section>
@@ -82,4 +81,4 @@ const AlbumsList = () => {
     )
 }
 
-export default AlbumsList
+export default GenresList

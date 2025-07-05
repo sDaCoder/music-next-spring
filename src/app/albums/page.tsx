@@ -1,20 +1,12 @@
 "use client"
+import AlbumCard from '@/components/AlbumCard/AlbumCard'
+import { AlbumType } from '@/components/AlbumsList/AlbumsList';
+import { Skeleton } from '@/components/ui/skeleton';
+import axios from 'axios';
 import React, { useEffect, useState } from 'react'
-import { Carousel, CarouselContent, CarouselItem } from '../ui/carousel'
-import { Button } from '../ui/button'
-import axios from 'axios'
-import AlbumCard from '../AlbumCard/AlbumCard'
-import { Skeleton } from '../ui/skeleton'
-import { useRouter } from 'next/navigation'
 
-export interface AlbumType {
-    title: string,
-    coverArtUrl: string,
-    releaseDate: string,
-};
+const page = () => {
 
-const AlbumsList = () => {
-    const router = useRouter()
     const [albums, setAlbums] = useState<AlbumType[]>([]);
     const [loading, setLoading] = useState<boolean>(false)
 
@@ -38,20 +30,12 @@ const AlbumsList = () => {
 
     return (
         <>
-            <section className='space-y-4'>
+            <section className='container mx-auto px-6 py-4 space-y-4'>
 
                 <div className='flex justify-between items-center py-4'>
                     <div className='md:space-y-2'>
                         <h1 className='md:text-5xl text-3xl font-bold'>Top Albums</h1>
                         <p className='text-xs'>List of songs made for you</p>
-                    </div>
-                    <div className='flex items-center gap-2'>
-                        <Button 
-                            variant={'ghost'}
-                            onClick={() => router.push('/albums')}
-                        >
-                            View All
-                        </Button>
                     </div>
                 </div>
 
@@ -66,20 +50,16 @@ const AlbumsList = () => {
                     )
                 }
 
-                <Carousel className='w-full'>
-                    <CarouselContent>
-                        {
-                            albums.map((album, index) => (
-                                <CarouselItem key={index} className='pl-2 md:pl-4 basis-full sm:basis-1/2 md:basis-1/3 lg:basis-1/4 xl:basis-1/5'>
-                                    <AlbumCard album={album} />
-                                </CarouselItem>
-                            ))
-                        }
-                    </CarouselContent>
-                </Carousel>
+                <div className='w-full'>
+                    <div className='grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6'>
+                        {albums.map((album, index) => (
+                            <AlbumCard key={index} album={album} />
+                        ))}
+                    </div>
+                </div>
             </section>
         </>
     )
 }
 
-export default AlbumsList
+export default page
