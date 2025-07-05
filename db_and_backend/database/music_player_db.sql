@@ -36,3 +36,26 @@ CREATE TABLE IF NOT EXISTS song_genres (
   genre_id UUID NOT NULL REFERENCES genres(genre_id) ON DELETE CASCADE,
   PRIMARY KEY (song_id, genre_id)
 );
+
+CREATE TABLE IF NOT EXISTS playlists (
+    playlist_id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    name VARCHAR(255) NOT NULL,
+    playlist_icon_url TEXT NULL, 
+    created_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS playlist_songs (
+    playlist_id UUID NOT NULL REFERENCES playlists(playlist_id) ON DELETE CASCADE,
+    song_id UUID NOT NULL REFERENCES songs(song_id) ON DELETE CASCADE,
+    added_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    position INTEGER NOT NULL, 
+    PRIMARY KEY (playlist_id, song_id)
+);
+
+ALTER TABLE playlist_songs ADD CONSTRAINT unique_playlist_position UNIQUE (playlist_id, position);
+
+ALTER TABLE playlist_songs DROP CONSTRAINT unique_playlist_position;
+
+ALTER TABLE playlist_songs ADD CONSTRAINT unique_playlist_position UNIQUE (playlist_id, position) DEFERRABLE INITIALLY IMMEDIATE;
+

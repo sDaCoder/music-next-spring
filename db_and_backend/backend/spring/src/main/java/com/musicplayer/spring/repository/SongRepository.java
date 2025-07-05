@@ -42,4 +42,8 @@ public class SongRepository {
     public int deleteById(UUID id) {
         return jdbcTemplate.update("DELETE FROM songs WHERE song_id = ?", id);
     }
+    public List<Song> findByAlbumId(UUID albumId) {
+        String sql = "SELECT * FROM songs WHERE album_id = ?";
+        return jdbcTemplate.query(sql, new Object[]{albumId}, new BeanPropertyRowMapper<>(Song.class));
+    }
 }
