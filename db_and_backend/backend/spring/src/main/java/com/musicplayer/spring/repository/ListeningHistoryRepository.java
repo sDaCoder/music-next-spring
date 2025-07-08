@@ -2,48 +2,70 @@ package com.musicplayer.spring.repository;
 
 import com.musicplayer.spring.model.ListeningHistory;
 import com.musicplayer.spring.model.Song;
-import org.springframework.dao.EmptyResultDataAccessException;
-import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
+
+import java.sql.PreparedStatement;
+import java.sql.Statement;
+import java.sql.Timestamp;
+
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 @Repository
-public class ListeningHistoryRepository  {
-    private JdbcTemplate jdbcTemplate;
+public class ListeningHistoryRepository {
 
-    private final RowMapper<Song> songRowMapper = (rs, rowNum) -> new Song(
-            rs.getObject("song_id", UUID.class),
-            rs.getString("title"),
-            rs.getInt("duration_seconds"),
-            rs.getString("file_url"),
-            rs.getObject("artist_id", UUID.class),
-            rs.getObject("album_id", UUID.class)
-    );
+    private final JdbcTemplate jdbcTemplate;
 
-
-    public List<Song> findAll() {
-        String sql = "";
-        return jdbcTemplate.query(sql, songRowMapper);
+    @Autowired
+    public ListeningHistoryRepository(JdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
     }
 
-    public Optional<Song> findById(UUID id) {
-        String sql = "";
-        try {
-            Song song = jdbcTemplate.queryForObject(sql, new Object[]{id}, songRowMapper);
-            return Optional.ofNullable(song);
-        } catch (EmptyResultDataAccessException e) {
-            return Optional.empty();
+    // ✅ Get all songs from listening history
+    public List<Song> findAllSongsFromListeningHistory() {
+        String sql = """
+            SELECT 
+                s.song_id AS songId,
+                s.title,
+                s.duration_seconds AS durationSeconds,
+                s.file_url AS fileUrl,
+                s.artist_id AS artistId,
+                s.album_id AS albumId
+            FROM listening_history lh
+            JOIN songs s ON lh.song_id = s.song_id
+        """;
+
+        return jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(Song.class));
+    }
+
+    // ✅ Add a new ListeningHistory row
+    public ListeningHistory add(ListeningHistory listeningHistory) {
+        String insertSQL = "INSERT INTO listening_history (song_id, listened_at) VALUES (?, ?)";
+
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+
+        jdbcTemplate.update(connection -> {
+            PreparedStatement ps = connection.prepareStatement(insertSQL, Statement.RETURN_GENERATED_KEYS);
+            ps.setObject(1, listeningHistory.getSongId());
+            ps.setTimestamp(2, Timestamp.valueOf(listeningHistory.getListenedAt()));
+            return ps;
+        }, keyHolder);
+
+        // Use getKeys() instead of getKey() to avoid the error
+        Number id = (Number) keyHolder.getKeys().get("id");
+        if (id != null) {
+            listeningHistory.setId(id.longValue());
         }
+
+        return listeningHistory;
     }
 
-    public List<Song> searchByTitle(String titleTerm) {
-        // The '%' are wildcards. '%term%' means the term can appear anywhere in the title.
-        String sql = "SELECT * FROM songs WHERE title ILIKE ?";
-        return jdbcTemplate.query(sql, new Object[]{"%" + titleTerm + "%"}, songRowMapper);
-    }
+
 }
+
