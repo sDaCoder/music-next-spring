@@ -1,8 +1,14 @@
 package com.musicplayer.spring.controller;
 
 import com.musicplayer.spring.dto.GenreRequest;
+import com.musicplayer.spring.model.Album;
+import com.musicplayer.spring.model.Artist;
 import com.musicplayer.spring.model.Genre;
+import com.musicplayer.spring.model.Song;
+import com.musicplayer.spring.service.AlbumService;
+import com.musicplayer.spring.service.ArtistService;
 import com.musicplayer.spring.service.GenreService;
+import com.musicplayer.spring.service.SongService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,6 +22,12 @@ import java.util.UUID;
 public class GenreController {
     @Autowired
     private GenreService genreService;
+    @Autowired
+    private AlbumService albumService;
+    @Autowired
+    private ArtistService artistService;
+    @Autowired
+    private SongService songService;
 
     @GetMapping
     public List<Genre> getAllGenres() { return genreService.getAllGenres(); }
@@ -23,6 +35,21 @@ public class GenreController {
     @GetMapping("/{id}")
     public ResponseEntity<Genre> getGenreById(@PathVariable UUID id) {
         return genreService.getGenreById(id).map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
+    }
+
+    @GetMapping("/{genreId}/songs")
+    public List<Song> getSongsByGenre(@PathVariable UUID genreId) {
+        return songService.getSongsByGenreId(genreId);
+    }
+
+    @GetMapping("/{genreId}/albums")
+    public List<Album> getAlbumsByGenre(@PathVariable UUID genreId) {
+        return albumService.getAlbumsByGenreId(genreId);
+    }
+
+    @GetMapping("/{genreId}/artists")
+    public List<Artist> getArtistsByGenre(@PathVariable UUID genreId) {
+        return artistService.getArtistsByGenreId(genreId);
     }
 
     @PostMapping

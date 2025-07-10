@@ -18,10 +18,15 @@ public class ArtistService {
 
     public List<Artist> getAllArtists() { return artistRepository.findAll(); }
     public Optional<Artist> getArtistById(UUID id) { return artistRepository.findById(id); }
+    public List<Artist> getArtistsByGenreId(UUID genreId) {
+        return artistRepository.findByGenreId(genreId);
+    }
 
     public Artist createArtist(ArtistRequest request) {
         Artist artist = new Artist();
         artist.setName(request.getName());
+        artist.setImageUrl(request.getImageUrl());
+        artist.setBio(request.getBio());
         return artistRepository.save(artist);
     }
 
@@ -29,6 +34,8 @@ public class ArtistService {
         if (artistRepository.findById(id).isPresent()) {
             Artist artistToUpdate = new Artist();
             artistToUpdate.setName(request.getName());
+            artistToUpdate.setImageUrl(request.getImageUrl());
+            artistToUpdate.setBio(request.getBio());
             artistRepository.update(id, artistToUpdate);
             artistToUpdate.setArtistId(id);
             return Optional.of(artistToUpdate);

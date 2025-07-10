@@ -8,5 +8,6 @@ import java.time.OffsetDateTime;
 public class Genre {
     private UUID genreId;
     private String name;
+    private String description;
     private OffsetDateTime createdAt;
 }

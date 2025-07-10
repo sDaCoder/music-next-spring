@@ -1,8 +1,10 @@
 package com.musicplayer.spring.controller;
 
+import com.musicplayer.spring.dto.SongRequest;
 import com.musicplayer.spring.model.Song;
 import com.musicplayer.spring.service.SongService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -34,5 +36,24 @@ public class SongController {
     @GetMapping("/search")
     public List<Song> searchSongs(@RequestParam String title) {
         return songService.searchSongsByTitle(title);
+    }
+
+    @PostMapping
+    public ResponseEntity<Song> createSong(@RequestBody SongRequest request) {
+        Song createdSong = songService.createSong(request);
+        return new ResponseEntity<>(createdSong, HttpStatus.CREATED);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Song> updateSong(@PathVariable UUID id, @RequestBody SongRequest request) {
+        return songService.updateSong(id, request)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteSong(@PathVariable UUID id) {
+        boolean deleted = songService.deleteSong(id);
+        return deleted ? ResponseEntity.noContent().build() : ResponseEntity.notFound().build();
     }
 }

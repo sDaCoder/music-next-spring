@@ -11,6 +11,7 @@ public class Album {
     private String title;
     private LocalDate releaseDate;
     private String coverArtUrl;
+    private String description;
     private UUID artistId;
     private OffsetDateTime createdAt;
 }

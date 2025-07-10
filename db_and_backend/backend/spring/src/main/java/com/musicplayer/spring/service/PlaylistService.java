@@ -36,6 +36,7 @@ public class PlaylistService {
         Playlist playlist = new Playlist();
         playlist.setName(request.getName());
         playlist.setPlaylistIconUrl(request.getPlaylistIconUrl());
+        playlist.setDescription(request.getDescription());
         return playlistRepository.save(playlist);
     }
 
@@ -43,6 +44,7 @@ public class PlaylistService {
         return playlistRepository.findById(id).map(playlist -> {
             playlist.setName(request.getName());
             playlist.setPlaylistIconUrl(request.getPlaylistIconUrl());
+            playlist.setDescription(request.getDescription());
             playlistRepository.update(id, playlist);
             return playlist;
         });
@@ -78,40 +80,28 @@ public class PlaylistService {
     }
 
 
-    // Replace the entire moveSongInPlaylist method in PlaylistService.java
     @Transactional
     public void moveSongInPlaylist(UUID playlistId, UUID songId, int newPosition) {
         int oldPosition = playlistRepository.findPositionOfSong(playlistId, songId)
                 .orElseThrow(() -> new IllegalStateException("Song not found in playlist"));
 
         if (oldPosition == newPosition) {
-            return; // No change needed
+            return;
         }
 
-        // Tell the database to wait until the transaction is over to check our unique constraint
-        playlistRepository.setConstraintsDeferred(playlistId);
+        playlistRepository.setConstraintsDeferred();
 
         if (newPosition < oldPosition) {
-            // Moving UP the list (e.g., from 5 to 2).
-            // Shift songs between the new and old positions DOWN (+1).
             playlistRepository.shiftPositions(playlistId, newPosition, oldPosition - 1, 1);
         } else {
-            // Moving DOWN the list (e.g., from 2 to 5).
-            // Shift songs between the old and new positions UP (-1).
             playlistRepository.shiftPositions(playlistId, oldPosition + 1, newPosition, -1);
         }
 
-        // Finally, place the moved song into its new, now-empty spot.
         playlistRepository.updateSongPosition(playlistId, songId, newPosition);
-
-        // The transaction commits here, and the database checks the constraint.
-        // Since all positions are now unique again, the check passes.
     }
-
     public List<Song> getSongsFromPlaylist(UUID playlistId) {
         return playlistRepository.findSongsByPlaylistId(playlistId);
     }
-
     @Transactional
     public void updateSongOrder(UUID playlistId, List<SongOrderRequest> songOrderRequests) {
         for (SongOrderRequest request : songOrderRequests) {

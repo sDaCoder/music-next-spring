@@ -21,6 +21,7 @@ public class GenreService {
     public Genre createGenre(GenreRequest request) {
         Genre genre = new Genre();
         genre.setName(request.getName());
+        genre.setDescription(request.getDescription());
         return genreRepository.save(genre);
     }
 
@@ -28,6 +29,7 @@ public class GenreService {
         if(genreRepository.findById(id).isPresent()) {
             Genre genre = new Genre();
             genre.setName(request.getName());
+            genre.setDescription(request.getDescription());
             genreRepository.update(id, genre);
             genre.setGenreId(id);
             return Optional.of(genre);

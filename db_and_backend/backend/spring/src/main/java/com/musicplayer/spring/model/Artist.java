@@ -9,5 +9,7 @@ public class Artist {
     private UUID artistId;
     private String name;
     private OffsetDateTime createdAt;
+    private String bio;
+    private String imageUrl;
 }
 

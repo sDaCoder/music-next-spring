@@ -2,7 +2,9 @@ package com.musicplayer.spring.controller;
 
 import com.musicplayer.spring.dto.AlbumRequest;
 import com.musicplayer.spring.model.Album;
+import com.musicplayer.spring.model.Song;
 import com.musicplayer.spring.service.AlbumService;
+import com.musicplayer.spring.service.SongService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,12 +21,20 @@ public class AlbumController {
     @Autowired
     private AlbumService albumService;
 
+    @Autowired
+    private SongService songService;
+
     @GetMapping
     public List<Album> getAllAlbums() { return albumService.getAllAlbums(); }
 
     @GetMapping("/{id}")
     public ResponseEntity<Album> getAlbumById(@PathVariable UUID id) {
         return albumService.getAlbumById(id).map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
+    }
+
+    @GetMapping("/{albumId}/songs")
+    public List<Song> getSongsByAlbum(@PathVariable UUID albumId) {
+        return songService.getSongsByAlbumId(albumId);
     }
 
     @PostMapping

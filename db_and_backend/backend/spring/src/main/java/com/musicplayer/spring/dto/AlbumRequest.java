@@ -8,6 +8,7 @@ import java.util.UUID;
 public class AlbumRequest {
     private String title;
     private LocalDate releaseDate;
+    private String description;
     private String coverArtUrl;
     private UUID artistId;
 }

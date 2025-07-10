@@ -25,13 +25,19 @@ public class GenreRepository {
     }
 
     public Genre save(Genre genre) {
-        genre.setGenreId(UUID.randomUUID());
-        jdbcTemplate.update("INSERT INTO genres (genre_id, name) VALUES (?, ?)", genre.getGenreId(), genre.getName());
-        return genre;
+        String sql = "INSERT INTO genres (name, description) VALUES (?, ?) RETURNING *";
+        return jdbcTemplate.queryForObject(
+                sql,
+                new Object[]{
+                        genre.getName(),
+                        genre.getDescription()
+                },
+                new BeanPropertyRowMapper<>(Genre.class)
+        );
     }
 
     public int update(UUID id, Genre genre) {
-        return jdbcTemplate.update("UPDATE genres SET name = ? WHERE genre_id = ?", genre.getName(), id);
+        return jdbcTemplate.update("UPDATE genres SET name = ?, description = ? WHERE genre_id = ?", genre.getName(),genre.getDescription(), id);
     }
 
     public int deleteById(UUID id) {

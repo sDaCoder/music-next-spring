@@ -9,6 +9,7 @@ public class Playlist {
     private UUID playlistId;
     private String name;
     private String playlistIconUrl;
+    private String description;
     private OffsetDateTime createdAt;
     private OffsetDateTime updatedAt;
 }

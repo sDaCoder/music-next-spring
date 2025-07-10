@@ -31,15 +31,21 @@ public class PlaylistRepository {
     }
 
     public Playlist save(Playlist playlist) {
-        playlist.setPlaylistId(UUID.randomUUID());
-        String sql = "INSERT INTO playlists (playlist_id, name, playlist_icon_url, created_at, updated_at) VALUES (?, ?, ?, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)";
-        jdbcTemplate.update(sql, playlist.getPlaylistId(), playlist.getName(), playlist.getPlaylistIconUrl());
-        return playlist;
+        String sql = "INSERT INTO playlists (name, playlist_icon_url, description) VALUES (?, ?, ?) RETURNING *";
+        return jdbcTemplate.queryForObject(
+                sql,
+                new Object[]{
+                        playlist.getName(),
+                        playlist.getPlaylistIconUrl(),
+                        playlist.getDescription()
+                },
+                new BeanPropertyRowMapper<>(Playlist.class)
+        );
     }
 
     public int update(UUID id, Playlist playlist) {
-        String sql = "UPDATE playlists SET name = ?, playlist_icon_url = ?, updated_at = CURRENT_TIMESTAMP WHERE playlist_id = ?";
-        return jdbcTemplate.update(sql, playlist.getName(), playlist.getPlaylistIconUrl(), id);
+        String sql = "UPDATE playlists SET name = ?, playlist_icon_url = ?, description = ?, updated_at = CURRENT_TIMESTAMP WHERE playlist_id = ?";
+        return jdbcTemplate.update(sql, playlist.getName(), playlist.getPlaylistIconUrl(),playlist.getDescription(), id);
     }
 
     public int deleteById(UUID id) {
@@ -67,7 +73,8 @@ public class PlaylistRepository {
         }
     }
 
-    public void setConstraintsDeferred(UUID playlistId) {
+    @SuppressWarnings("SqlResolve")
+    public void setConstraintsDeferred() {
         jdbcTemplate.execute("SET CONSTRAINTS unique_playlist_position DEFERRED");
     }
 
@@ -80,17 +87,6 @@ public class PlaylistRepository {
     public void updateSongPosition(UUID playlistId, UUID songId, int newPosition) {
         String sql = "UPDATE playlist_songs SET position = ? WHERE playlist_id = ? AND song_id = ?";
         jdbcTemplate.update(sql, newPosition, playlistId, songId);
-    }
-
-    public void shiftPositionsDownInRange(UUID playlistId, int startPosition, int endPosition) {
-        String sql = "UPDATE playlist_songs SET position = position + 1 WHERE playlist_id = ? AND position >= ? AND position <= ?";
-        jdbcTemplate.update(sql, playlistId, startPosition, endPosition);
-    }
-
-
-    public void shiftPositionsUpInRange(UUID playlistId, int startPosition, int endPosition) {
-        String sql = "UPDATE playlist_songs SET position = position - 1 WHERE playlist_id = ? AND position >= ? AND position <= ?";
-        jdbcTemplate.update(sql, playlistId, startPosition, endPosition);
     }
 
 
@@ -114,26 +110,4 @@ public class PlaylistRepository {
         return jdbcTemplate.query(sql, new Object[]{playlistId}, new BeanPropertyRowMapper<>(Song.class));
     }
 
-
-
-    public void moveSongUp(UUID playlistId, UUID songId, int oldPosition, int newPosition) {
-        String sql = "UPDATE playlist_songs " +
-                "SET position = CASE " +
-                "    WHEN song_id = ? THEN ? " +
-                "    ELSE position + 1 " +
-                "END " +
-                "WHERE playlist_id = ? AND position >= ? AND position <= ?";
-        jdbcTemplate.update(sql, songId, newPosition, playlistId, newPosition, oldPosition);
-    }
-
-
-    public void moveSongDown(UUID playlistId, UUID songId, int oldPosition, int newPosition) {
-        String sql = "UPDATE playlist_songs " +
-                "SET position = CASE " +
-                "    WHEN song_id = ? THEN ? " +
-                "    ELSE position - 1 " +
-                "END " +
-                "WHERE playlist_id = ? AND position >= ? AND position <= ?";
-        jdbcTemplate.update(sql, songId, newPosition, playlistId, oldPosition, newPosition);
-    }
 }

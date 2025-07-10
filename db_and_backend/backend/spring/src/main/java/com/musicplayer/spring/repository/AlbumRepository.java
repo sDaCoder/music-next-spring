@@ -27,15 +27,35 @@ public class AlbumRepository {
     }
 
     public Album save(Album album) {
-        album.setAlbumId(UUID.randomUUID());
-        String sql = "INSERT INTO albums (album_id, title, release_date, cover_art_url, artist_id) VALUES (?, ?, ?, ?, ?)";
-        jdbcTemplate.update(sql, album.getAlbumId(), album.getTitle(), album.getReleaseDate(), album.getCoverArtUrl(), album.getArtistId());
-        return album;
+        String sql = "INSERT INTO albums (title, release_date, cover_art_url, description, artist_id) VALUES (?, ?, ?, ?, ?) RETURNING *";
+        return jdbcTemplate.queryForObject(
+                sql,
+                new Object[]{
+                        album.getTitle(),
+                        album.getReleaseDate(),
+                        album.getCoverArtUrl(),
+                        album.getDescription(),
+                        album.getArtistId()
+                },
+                new BeanPropertyRowMapper<>(Album.class)
+        );
+    }
+    public int update(UUID id, Album album) {
+        String sql = "UPDATE albums SET title = ?, release_date = ?, cover_art_url = ?, description = ?, artist_id = ? WHERE album_id = ?";
+        return jdbcTemplate.update(sql, album.getTitle(), album.getReleaseDate(), album.getCoverArtUrl(),album.getDescription(), album.getArtistId(), id);
     }
 
-    public int update(UUID id, Album album) {
-        String sql = "UPDATE albums SET title = ?, release_date = ?, cover_art_url = ?, artist_id = ? WHERE album_id = ?";
-        return jdbcTemplate.update(sql, album.getTitle(), album.getReleaseDate(), album.getCoverArtUrl(), album.getArtistId(), id);
+    public List<Album> findByArtistId(UUID artistId) {
+        String sql = "SELECT * FROM albums WHERE artist_id = ?";
+        return jdbcTemplate.query(sql, new Object[]{artistId}, new BeanPropertyRowMapper<>(Album.class));
+    }
+
+    public List<Album> findByGenreId(UUID genreId) {
+        String sql = "SELECT DISTINCT a.* FROM albums a " +
+                "JOIN songs s ON a.album_id = s.album_id " +
+                "JOIN song_genres sg ON s.song_id = sg.song_id " +
+                "WHERE sg.genre_id = ?";
+        return jdbcTemplate.query(sql, new Object[]{genreId}, new BeanPropertyRowMapper<>(Album.class));
     }
 
     public int deleteById(UUID id) {

@@ -29,18 +29,27 @@ public class ArtistRepository {
         }
     }
 
+    public List<Artist> findByGenreId(UUID genreId) {
+        String sql = "SELECT DISTINCT ar.* FROM artists ar " +
+                "JOIN songs s ON ar.artist_id = s.artist_id " +
+                "JOIN song_genres sg ON s.song_id = sg.song_id " +
+                "WHERE sg.genre_id = ?";
+        return jdbcTemplate.query(sql, new Object[]{genreId}, new BeanPropertyRowMapper<>(Artist.class));
+    }
     public Artist save(Artist artist) {
-        artist.setArtistId(UUID.randomUUID());
-        jdbcTemplate.update("INSERT INTO artists (artist_id, name) VALUES (?, ?)",
-                artist.getArtistId(), artist.getName());
-        return artist;
+        String sql = "INSERT INTO artists (name, image_url, bio) VALUES (?, ?, ?) RETURNING *";
+        return jdbcTemplate.queryForObject(
+                sql,
+                new Object[]{artist.getName(), artist.getImageUrl(), artist.getBio()},
+                new BeanPropertyRowMapper<>(Artist.class)
+        );
     }
 
+    // UPDATE the update method
     public int update(UUID id, Artist artist) {
-        return jdbcTemplate.update("UPDATE artists SET name = ? WHERE artist_id = ?",
-                artist.getName(), id);
+        return jdbcTemplate.update("UPDATE artists SET name = ?, image_url = ?, bio = ? WHERE artist_id = ?",
+                artist.getName(), artist.getImageUrl(), artist.getBio(), id);
     }
-
     public int deleteById(UUID id) {
         return jdbcTemplate.update("DELETE FROM artists WHERE artist_id = ?", id);
     }
