@@ -4,7 +4,7 @@ import { Recent } from '@/components/RecentsList/RecentsList';
 import axios from 'axios'
 import React, { useEffect, useState } from 'react'
 
-const page = () => {
+const Page = () => {
     const [recents, setRecents] = useState<Recent []>([]);
 
     useEffect(() => {
@@ -41,4 +41,4 @@ const page = () => {
     )
 }
 
-export default page
+export default Page
