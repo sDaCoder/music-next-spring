@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react'
 import { Carousel, CarouselContent, CarouselItem } from '../ui/carousel'
 import { Button } from '../ui/button'
 import axios from 'axios'
-import GenreCard, { bgColors } from '../GenreCard/GenreCard'
+import GenreCard from '../GenreCard/GenreCard'
 import { Skeleton } from '../ui/skeleton'
 import { useRouter } from 'next/navigation'
 
@@ -66,7 +66,7 @@ const GenresList = () => {
                 <Carousel className="w-full">
                     <CarouselContent>
                         {genres.map((genre, index) => {
-                            const randIndex = index % bgColors.length;
+                            const randIndex = index;
                             
                             return (
                                 <CarouselItem key={index} className="pl-2 md:pl-4 basis-full sm:basis-1/2 md:basis-1/3 lg:basis-1/4 xl:basis-1/6">

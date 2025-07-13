@@ -3,12 +3,14 @@ import React from 'react'
 import { Card, CardContent } from '../ui/card'
 import { Button } from '../ui/button'
 import { artistType } from '../ArtistsList/ArtistsList'
+import { useRouter } from 'next/navigation'
 
 interface ArtistCardProps {
     artist: artistType
 }
 
 const ArtistCard: React.FC<ArtistCardProps> = ({artist}) => {
+    const router = useRouter()
     return (
         <>
             <Card className="group cursor-pointer hover:shadow-lg transition-all duration-300">
@@ -19,10 +21,16 @@ const ArtistCard: React.FC<ArtistCardProps> = ({artist}) => {
                             alt={artist.name}
                             fill
                             className="object-cover transition-transform group-hover:scale-105"
-                        />
+                            onClick={() => router.push(`/artist/${artist.artistId}`)}
+                            />
                     </div>
                     <div className="text-center space-y-1">
-                        <h4 className="font-medium truncate">{artist?.name}</h4>
+                        <h4 
+                            className="font-medium truncate"
+                            onClick={() => router.push(`/artist/${artist.artistId}`)}
+                        >
+                            {artist?.name}
+                        </h4>
                         {/* <p className="text-sm text-muted-foreground">{artist.followers} followers</p> */}
                     </div>
                     <Button size="sm" className="w-full">

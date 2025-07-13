@@ -4,12 +4,15 @@ import Image from 'next/image'
 import { Button } from '../ui/button'
 import { Heart, MoreHorizontal, Play } from 'lucide-react'
 import { AlbumType } from '../AlbumsList/AlbumsList'
+import { useRouter } from 'next/navigation'
 
 interface AlbumCardProps {
     album: AlbumType;
 }
 
 const AlbumCard: React.FC<AlbumCardProps> = ({ album }) => {
+
+    const router = useRouter()
     return (
         <>
             <Card className="group cursor-pointer hover:shadow-lg transition-all duration-300">
@@ -36,7 +39,10 @@ const AlbumCard: React.FC<AlbumCardProps> = ({ album }) => {
                         </div>
                     </div>
                     <div className="space-y-1">
-                        <h4 className="font-medium truncate">{album?.title}</h4>
+                        <h4 
+                          className="font-medium truncate"
+                          onClick={() => router.push(`/album/${album.albumId}`)}
+                        >{album?.title}</h4>
                         <p className="text-sm text-muted-foreground truncate">Released on {album?.releaseDate}</p>
                     </div>
                 </CardContent>

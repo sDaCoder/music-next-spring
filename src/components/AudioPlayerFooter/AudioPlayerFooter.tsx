@@ -1,3 +1,4 @@
+"use client"
 import React, { useState, useRef, useEffect } from 'react'
 import { Card } from '../ui/card';
 import Image from 'next/image';

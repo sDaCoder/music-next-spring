@@ -8,6 +8,7 @@ import { Skeleton } from '../ui/skeleton'
 import { useRouter } from 'next/navigation'
 
 export interface AlbumType {
+    albumId: string,
     title: string,
     coverArtUrl: string,
     releaseDate: string,

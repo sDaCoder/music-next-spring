@@ -1,6 +1,7 @@
 import AlbumsList from "@/components/AlbumsList/AlbumsList";
 import ArtistsList from "@/components/ArtistsList/ArtistsList";
 import GenresList from "@/components/GenresList/GenresList";
+import RecentsList from "@/components/RecentsList/RecentsList";
 
 const Home: React.FC = () => {
   return (
@@ -13,6 +14,7 @@ const Home: React.FC = () => {
         Click me to open the songs list
       </Link> */}
       <main className="container mx-auto space-y-8 py-4 px-6">
+        <RecentsList />
         <AlbumsList />
         <ArtistsList />
         <GenresList />
