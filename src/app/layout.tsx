@@ -3,7 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import Navbar from "@/components/Navbar/Navbar";
 import { ThemeProvider } from "@/components/theme-provider";
-import { StateContextProvider } from "@/contexts/musicContext";
+import { MusicStateContextProvider } from "@/contexts/musicContext";
 import PlayerComponent from "@/components/PlayerComponent/PlayerComponent";
 
 const geistSans = Geist({
@@ -37,11 +37,11 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <StateContextProvider>
+          <MusicStateContextProvider>
             <Navbar />
             {children}
             <PlayerComponent />
-          </StateContextProvider>
+          </MusicStateContextProvider>
         </ThemeProvider>
       </body>
     </html>

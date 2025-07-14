@@ -1,18 +1,18 @@
 "use client"
 import React, { createContext, useState } from "react";
 
-interface StateContextProps {
+interface MusicStateContextProps {
     songId: string,
     setSongId: React.Dispatch<React.SetStateAction<string>>
 }
 
-export const StateContext = createContext<StateContextProps | null>(null);
+export const MusicStateContext = createContext<MusicStateContextProps | null>(null);
 
-export const StateContextProvider: React.FC<{children: React.ReactNode}> = ({children}) => {
+export const MusicStateContextProvider: React.FC<{children: React.ReactNode}> = ({children}) => {
     const [songId, setSongId] = useState<string>("");
     return (
-        <StateContext.Provider value={{songId, setSongId}}>
+        <MusicStateContext.Provider value={{songId, setSongId}}>
             {children}
-        </StateContext.Provider>
+        </MusicStateContext.Provider>
     )
 }

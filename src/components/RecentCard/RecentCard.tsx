@@ -4,19 +4,17 @@ import Image from 'next/image'
 import { Button } from '../ui/button'
 import { Play } from 'lucide-react'
 import { Recent } from '../RecentsList/RecentsList'
-import { useStateData } from '@/hooks/useStateData'
+import useMusicStateData from '@/hooks/useMusicStateData'
 
 interface RecentCardProps {
     recent: Recent
 }
 
 const RecentCard: React.FC<RecentCardProps> = ({recent}) => {
-    const {setSongId} = useStateData()
+    const {setSongId} = useMusicStateData()
     return (
         <>
-            <Card
-                className="group cursor-pointer hover:shadow-lg transition-all duration-300"
-            >
+            <Card className="group cursor-pointer hover:shadow-lg transition-all duration-300">
                 <CardContent className="p-4 space-y-3">
                     <div className="relative aspect-square overflow-hidden rounded-lg">
                         <Image

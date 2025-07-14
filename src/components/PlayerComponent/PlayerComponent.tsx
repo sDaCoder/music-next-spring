@@ -1,10 +1,10 @@
 "use client"
 import React from 'react'
 import AudioPlayerFooter from '../AudioPlayerFooter/AudioPlayerFooter'
-import { useStateData } from '@/hooks/useStateData'
+import useMusicStateData from '@/hooks/useMusicStateData'
 
 const PlayerComponent = () => {
-    const { songId } = useStateData()
+    const { songId } = useMusicStateData()
     return (
         <>
             {songId !== "" && <AudioPlayerFooter currentSongId={songId} />}

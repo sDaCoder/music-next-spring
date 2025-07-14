@@ -11,7 +11,7 @@ interface AudioPlayerFooterProps {
     currentSongId: string
 }
 
-const formatTime = (time: number) => {
+export const formatTime = (time: number) => {
     if (isNaN(time)) return '0:00';
     const minutes = Math.floor(time / 60);
     const seconds = Math.floor(time % 60);
@@ -22,6 +22,7 @@ interface SongType {
     songId: string,
     title: string,
     durationSeconds: number,
+    url: string,
     fileUrl: string,
     artistId: string,
     albumId: string
@@ -48,7 +49,6 @@ const AudioPlayerFooter: React.FC<AudioPlayerFooterProps> = ({ currentSongId }) 
         const fetchSong = async () => {
             const res = await axios.get(`http://localhost:8080/api/songs/${currentSongId}`)
             setCurrentSong(res.data);
-            console.log(res.data);
         }
         fetchSong()
     }, [currentSongId])
@@ -85,7 +85,7 @@ const AudioPlayerFooter: React.FC<AudioPlayerFooterProps> = ({ currentSongId }) 
 
     return (
         <>
-            <audio ref={audioRef} src={currentSong?.fileUrl} autoPlay={isPlaying} />
+            <audio ref={audioRef} src={`/${currentSong?.url}`} autoPlay={isPlaying} />
             <footer className='fixed bottom-4 w-full px-4 h-[18vh]'>
                 <Card className="p-3 shadow-lg rounded-2xl">
                     <div className='flex justify-between'>

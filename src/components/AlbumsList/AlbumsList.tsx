@@ -12,6 +12,7 @@ export interface AlbumType {
     title: string,
     coverArtUrl: string,
     releaseDate: string,
+    description: string
 };
 
 const AlbumsList = () => {
