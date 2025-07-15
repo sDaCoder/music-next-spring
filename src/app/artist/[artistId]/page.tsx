@@ -10,7 +10,7 @@ const Page: React.FC<PageProps> = async ({ params }) => {
     const { artistId } = await params
     return (
         <>
-            <main className='container mx-auto py-8 px-4 mb-20'>
+            <main className='container mx-auto py-8 px-4 mb-36'>
                 <ArtistInfo artistId={artistId} />
                 <ArtistSongsAlbums artistId={artistId} />
             </main>

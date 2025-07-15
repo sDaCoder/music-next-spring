@@ -18,7 +18,7 @@ const RecentCard: React.FC<RecentCardProps> = ({recent}) => {
                 <CardContent className="p-4 space-y-3">
                     <div className="relative aspect-square overflow-hidden rounded-lg">
                         <Image
-                            src={"/demo-img.jpg"}
+                            src={"/placeholder-1.svg"}
                             alt={recent.title}
                             fill
                             className="object-cover transition-transform group-hover:scale-105"

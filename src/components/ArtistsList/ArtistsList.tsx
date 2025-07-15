@@ -10,7 +10,8 @@ import { useRouter } from 'next/navigation'
 export interface artistType {
     artistId: string,
     name: string,
-    img: string
+    imageUrl: string,
+    bio: string
 }
 
 const ArtistsList = () => {

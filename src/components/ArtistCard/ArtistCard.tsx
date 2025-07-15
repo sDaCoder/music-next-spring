@@ -17,12 +17,12 @@ const ArtistCard: React.FC<ArtistCardProps> = ({artist}) => {
                 <CardContent className="p-4 space-y-3">
                     <div className="relative aspect-square overflow-hidden rounded-full">
                         <Image
-                            src={artist?.img || "/demo-img.jpg"}
-                            alt={artist.name}
+                            src={artist.imageUrl || "/placeholder-1.svg"}
+                            alt={artist.name || "Artist image"}
                             fill
                             className="object-cover transition-transform group-hover:scale-105"
                             onClick={() => router.push(`/artist/${artist.artistId}`)}
-                            />
+                        />
                     </div>
                     <div className="text-center space-y-1">
                         <h4 

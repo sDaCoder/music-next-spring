@@ -18,7 +18,7 @@ export const formatTime = (time: number) => {
     return `${minutes}:${seconds.toString().padStart(2, '0')}`;
 };
 
-interface SongType {
+export interface SongType {
     songId: string,
     title: string,
     durationSeconds: number,

@@ -5,16 +5,10 @@ import { AlbumType } from '../AlbumsList/AlbumsList';
 import axios from 'axios';
 import { Button } from '../ui/button';
 import { MoreHorizontal, Pause, Play } from 'lucide-react';
-import { formatTime } from '../AudioPlayerFooter/AudioPlayerFooter';
+import { formatTime, SongType } from '../AudioPlayerFooter/AudioPlayerFooter';
 import { Card, CardContent } from '../ui/card';
 import Image from 'next/image';
-
-interface ArtistSongsType {
-    songId: string,
-    title: string,
-    durationSeconds: number,
-    id: string,
-}
+import { useRouter } from 'next/navigation';
 
 interface ArtistAlbumsType {
     artistId: string,
@@ -22,9 +16,10 @@ interface ArtistAlbumsType {
 
 const ArtistSongsAlbums: React.FC<ArtistAlbumsType> = ({ artistId }) => {
 
-    const [artistSongs, setArtistSongs] = useState<ArtistSongsType[]>([]);
+    const [artistSongs, setArtistSongs] = useState<SongType[]>([]);
     const [artistAlbums, setArtistAlbums] = useState<AlbumType[]>([])
     const { songId, setSongId } = useMusicStateData()
+    const router = useRouter()
 
     useEffect(() => {
         
@@ -55,7 +50,7 @@ const ArtistSongsAlbums: React.FC<ArtistAlbumsType> = ({ artistId }) => {
                 <div className="lg:col-span-2 space-y-6">
                     <h2 className="text-2xl font-semibold">Popular</h2>
                     <div className="space-y-2">
-                        {artistSongs.map((artistSong: ArtistSongsType, index) => (
+                        {artistSongs.map((artistSong: SongType, index) => (
                             <div
                                 key={index}
                                 className={`group flex items-center gap-4 p-3 rounded-md hover:bg-muted/50 transition-colors cursor-pointer ${artistSong.songId === songId ? "bg-muted/50" : ""}`}
@@ -102,6 +97,7 @@ const ArtistSongsAlbums: React.FC<ArtistAlbumsType> = ({ artistId }) => {
                                                 alt={album.title}
                                                 fill
                                                 className="object-cover rounded-md"
+                                                onClick={() => router.push(`/album/${album.albumId}`)}
                                             />
                                         </div>
                                         <div className="flex-1 min-w-0">

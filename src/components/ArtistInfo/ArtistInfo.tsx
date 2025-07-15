@@ -29,7 +29,7 @@ const ArtistInfo: React.FC<ArtistInfoProps> = ({ artistId }) => {
                 <div className="flex-shrink-0">
                     <div className="relative w-64 h-64 md:w-80 md:h-80 mx-auto md:mx-0">
                         <Image
-                            src={"/demo-img.jpg"}
+                            src={artist?.imageUrl || "/placeholder-1.svg"}
                             alt={artist?.name || "Artist image"}
                             fill
                             className="object-cover rounded-full"
