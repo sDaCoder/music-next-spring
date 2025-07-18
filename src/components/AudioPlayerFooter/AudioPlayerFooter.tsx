@@ -3,7 +3,7 @@ import React, { useState, useRef, useEffect } from 'react'
 import { Card } from '../ui/card';
 import Image from 'next/image';
 import { Button } from '../ui/button';
-import { Maximize2, Pause, Play, SkipBack, SkipForward, Volume2, VolumeX } from 'lucide-react';
+import { ChevronDown, Heart, MoreHorizontal, Pause, Play, Repeat, Shuffle, SkipBack, SkipForward, Volume2, VolumeX } from 'lucide-react';
 import { Slider } from '../ui/slider';
 import axios from 'axios';
 
@@ -83,96 +83,235 @@ const AudioPlayerFooter: React.FC<AudioPlayerFooterProps> = ({ currentSongId }) 
         }
     }
 
+    const DURATION_LIMIT = 10; // seconds
+    const [hasLogged, setHasLogged] = useState<boolean>(false);
+
+    useEffect(() => {
+        if (currentTime > DURATION_LIMIT && !hasLogged) {
+            console.log('Song has played for more than 10 seconds.');
+            setHasLogged(true);
+        }
+    }, [currentTime, hasLogged]);
+
     return (
         <>
             <audio ref={audioRef} src={`/${currentSong?.url}`} autoPlay={isPlaying} />
-            <footer className='fixed bottom-4 w-full px-4 h-[18vh]'>
-                <Card className="p-3 shadow-lg rounded-2xl">
-                    <div className='flex justify-between'>
+            <Card className="fixed bottom-0 left-0 right-0 z-50 border-t bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/95 transition-transform duration-300">
 
-                        <div className="flex gap-4 items-start">
-                            <Image className="hidden md:block rounded-sm" src={'/nevermind.jpeg'} alt={'sample song'} width={100} height={100} />
-                            <div className="flex flex-col">
-                                <h1 className="text-2xl font-bold">{currentSong?.title}</h1>
-                                <h2 className="">Taran Aujla</h2>
+                {/* Drag bar */}
+                <div className="flex justify-center py-2 cursor-grab active:cursor-grabbing">
+                    <div className="w-12 h-1 bg-muted-foreground/30 rounded-full" />
+                </div>
+
+                <div className='px-4 pb-4'>
+
+
+                    <div className="hidden md:flex items-center gap-4">
+                        {/* Song Info */}
+                        <div className="flex items-center gap-3 min-w-0 flex-1">
+                            <div className="relative w-20 h-20 flex-shrink-0">
+                                <Image
+                                    src={"/placeholder-1.svg"}
+                                    alt={"sample song"}
+                                    fill
+                                    className="object-cover rounded-md"
+                                />
+                            </div>
+                            <div className="min-w-0 flex-1">
+                                <h3 className="font-semibold text-xl truncate">{currentSong?.title}</h3>
+                                <p className="text-sm text-muted-foreground truncate">{"Taran Aujla"}</p>
+                                {/* {currentSong.album && <p className="text-xs text-muted-foreground truncate">{currentSong.album}</p>} */}
+                            </div>
+                            <div className="flex gap-1">
+                                <Button variant="ghost" size="icon">
+                                    <Heart className="h-4 w-4" />
+                                </Button>
+                                <Button variant="ghost" size="icon">
+                                    <MoreHorizontal className="h-4 w-4" />
+                                </Button>
                             </div>
                         </div>
 
-                        <div className="flex flex-col gap-y-4 items-center justify-center">
-                            <div className='flex items-center gap-x-2'>
-                                <p className='font-mono'>{formatTime(currentTime)}</p>
-                                <Slider
-                                    defaultValue={[0]}
-                                    value={[currentTime]}
-                                    min={0}
-                                    max={duration}
-                                    step={1}
-                                    className="w-[30vw]"
-                                    onValueChange={seekAudio}
-                                />
-                                <p className='font-mono'>{formatTime(duration)}</p>
-                            </div>
-
-                            <div className='mx-auto flex gap-4 items-center'>
-                                <Button variant={'outline'} className='rounded-full py-6'>
-                                    <SkipBack />
-                                </Button>
+                        {/* Center Controls */}
+                        <div className="flex flex-col items-center gap-2 flex-1 max-w-md">
+                            <div className="flex items-center gap-2">
                                 <Button
-                                    className='rounded-full py-6'
-                                    onClick={() => {
-                                        if (audioRef.current) {
-                                            if (isPlaying) {
-                                                audioRef.current.pause();
-                                            } else {
-                                                audioRef.current.play();
-                                            }
+                                    variant="ghost"
+                                    size="icon"
+                                // onClick={toggleShuffle}
+                                // className={isShuffled ? "text-primary" : ""}
+                                >
+                                    <Shuffle className="h-10 w-10" />
+                                </Button>
+                                <Button variant="ghost" size="icon">
+                                    <SkipBack className="h-10 w-10" />
+                                </Button>
+                                <Button variant="ghost" size="icon" onClick={() => {
+                                    if (audioRef.current) {
+                                        if (isPlaying) {
+                                            audioRef.current.pause();
+                                        } else {
+                                            audioRef.current.play();
                                         }
-                                        setIsPlaying(!isPlaying);
-                                    }}
-                                >
-                                    {isPlaying ? <Pause /> : <Play />}
+                                    }
+                                    setIsPlaying(!isPlaying);
+                                }} className="h-10 w-10 rounded-full bg-foreground text-background">
+                                    {isPlaying ? <Pause className="h-6 w-6" /> : <Play className="h-6 w-6" />}
                                 </Button>
-                                <Button variant={'outline'} className='rounded-full py-6'>
-                                    <SkipForward />
+                                <Button variant="ghost" size="icon">
+                                    <SkipForward className="h-10 w-10" />
                                 </Button>
-                            </div>
-                        </div>
-
-                        <div>
-                            {/* <h1>Song Audio Controls</h1> */}
-                            <div className="flex items-center gap-x-2">
                                 <Button
-                                    size={'icon'}
-                                    variant={'outline'}
-                                    className='rounded-full'
-                                    onClick={() =>
-                                        volume === 0 ? setVolume(0.5) : setVolume(0)}
+                                    variant="ghost"
+                                    size="icon"
+                                // onClick={toggleRepeat}
+                                // className={isRepeating ? "text-primary" : ""}
                                 >
-                                    {volume !== 0 ? <VolumeX /> : <Volume2 />}
-                                    {/* <VolumeX /> */}
+                                    <Repeat className="h-10 w-10" />
                                 </Button>
-                                <Slider
-                                    defaultValue={[volume]}
-                                    value={[volume]}
-                                    min={0}
-                                    max={1}
-                                    step={0.01}
-                                    className="w-[15vw]"
-                                    onValueChange={(e) => {
-                                        setVolume(e[0])
-                                    }}
-                                />
-                                <Button size={'icon'} variant={'outline'} className='rounded-full'>
-                                    <Maximize2 />
-                                </Button>
+                            </div>
+
+                            <div className="flex items-center gap-2 w-full">
+                                <span className="text-xs text-muted-foreground w-10 text-right">{formatTime(currentTime)}</span>
+                                <Slider value={[currentTime]} onValueChange={seekAudio} max={100} step={1} className="flex-1" />
+                                <span className="text-xs text-muted-foreground w-10">{formatTime(duration)}</span>
                             </div>
                         </div>
 
+                        {/* Right Controls */}
+                        <div className="flex items-center gap-2 flex-1 justify-end">
+                            {/* <WaveformVisualizer isPlaying={isPlaying} className="w-24" /> */}
+
+                            {/* Playback Speed */}
+                            {/* <div className="relative">
+                            <Button
+                                variant="ghost"
+                                size="sm"
+                                onClick={() => setShowSpeedControl(!showSpeedControl)}
+                                className="text-xs"
+                            >
+                                {playbackSpeed}x
+                            </Button>
+                            {showSpeedControl && (
+                                <div className="absolute bottom-full right-0 mb-2 bg-popover border rounded-md shadow-md p-2 space-y-1">
+                                    {speedOptions.map((speed) => (
+                                        <Button
+                                            key={speed}
+                                            variant={playbackSpeed === speed ? "default" : "ghost"}
+                                            size="sm"
+                                            onClick={() => {
+                                                setPlaybackSpeed(speed)
+                                                setShowSpeedControl(false)
+                                            }}
+                                            className="w-full justify-start text-xs"
+                                        >
+                                            {speed}x
+                                        </Button>
+                                    ))}
+                                </div>
+                            )}
+                        </div> */}
+
+                            {/* Volume Control */}
+                            <div className="flex items-center gap-2">
+                                <Button variant="ghost" size="icon" onClick={volume === 0 ? () => setVolume(0.5) : () => setVolume(0)}>
+                                    {volume === 0 ? <VolumeX className="h-4 w-4" /> : <Volume2 className="h-4 w-4" />}
+                                </Button>
+                                <Slider value={[volume]} onValueChange={(e) => setVolume(e[0])} max={1} step={0.001} className="w-20" />
+                            </div>
+
+                            <Button variant="ghost" size="icon" >
+                                <ChevronDown className="h-4 w-4" />
+                            </Button>
+                        </div>
                     </div>
-                </Card>
-            </footer>
+                </div>
+            </Card>
         </>
     )
 }
 
 export default AudioPlayerFooter
+
+
+{/* <div className='flex justify-between'>
+
+                    <div className="flex gap-4 items-start">
+                        <Image className="hidden md:block rounded-sm" src={'/nevermind.jpeg'} alt={'sample song'} width={100} height={100} />
+                        <div className="flex flex-col">
+                            <h1 className="text-2xl font-bold">{currentSong?.title}</h1>
+                            <h2 className="">Taran Aujla</h2>
+                        </div>
+                    </div>
+
+                    <div className="flex flex-col gap-y-4 items-center justify-center">
+                        <div className='flex items-center gap-x-2'>
+                            <p className='font-mono'>{formatTime(currentTime)}</p>
+                            <Slider
+                                defaultValue={[0]}
+                                value={[currentTime]}
+                                min={0}
+                                max={duration}
+                                step={1}
+                                className="w-[30vw]"
+                                onValueChange={seekAudio}
+                            />
+                            <p className='font-mono'>{formatTime(duration)}</p>
+                        </div>
+
+                        <div className='mx-auto flex gap-4 items-center'>
+                            <Button variant={'outline'} className='rounded-full py-6'>
+                                <SkipBack />
+                            </Button>
+                            <Button
+                                className='rounded-full py-6'
+                                onClick={() => {
+                                    if (audioRef.current) {
+                                        if (isPlaying) {
+                                            audioRef.current.pause();
+                                        } else {
+                                            audioRef.current.play();
+                                        }
+                                    }
+                                    setIsPlaying(!isPlaying);
+                                }}
+                            >
+                                {isPlaying ? <Pause /> : <Play />}
+                            </Button>
+                            <Button variant={'outline'} className='rounded-full py-6'>
+                                <SkipForward />
+                            </Button>
+                        </div>
+                    </div>
+
+                    <div>
+                        {/* <h1>Song Audio Controls</h1> */}
+{/* <div className="flex items-center gap-x-2">
+    <Button
+        size={'icon'}
+        variant={'outline'}
+        className='rounded-full'
+        onClick={() =>
+            volume === 0 ? setVolume(0.5) : setVolume(0)}
+    >
+        {volume !== 0 ? <VolumeX /> : <Volume2 />}
+
+    </Button>
+    <Slider
+        defaultValue={[volume]}
+        value={[volume]}
+        min={0}
+        max={1}
+        step={0.01}
+        className="w-[15vw]"
+        onValueChange={(e) => {
+            setVolume(e[0])
+        }}
+    />
+    <Button size={'icon'} variant={'outline'} className='rounded-full'>
+        <Maximize2 />
+    </Button>
+</div>
+                    </div >
+
+                </div >  */}
