@@ -1,0 +1,45 @@
+import Image from 'next/image'
+import React from 'react'
+import { Card, CardContent } from '../ui/card'
+import { Button } from '../ui/button'
+import { artistType } from '../ArtistsList/ArtistsList'
+import { useRouter } from 'next/navigation'
+
+interface ArtistCardProps {
+    artist: artistType
+}
+
+const ArtistCard: React.FC<ArtistCardProps> = ({artist}) => {
+    const router = useRouter()
+    return (
+        <>
+            <Card className="group cursor-pointer hover:shadow-lg transition-all duration-300">
+                <CardContent className="p-4 space-y-3">
+                    <div className="relative aspect-square overflow-hidden rounded-full">
+                        <Image
+                            src={artist.imageUrl || "/placeholder-1.svg"}
+                            alt={artist.name || "Artist image"}
+                            fill
+                            className="object-cover transition-transform group-hover:scale-105"
+                            onClick={() => router.push(`/artist/${artist.artistId}`)}
+                        />
+                    </div>
+                    <div className="text-center space-y-1">
+                        <h4 
+                            className="font-medium truncate"
+                            onClick={() => router.push(`/artist/${artist.artistId}`)}
+                        >
+                            {artist?.name}
+                        </h4>
+                        {/* <p className="text-sm text-muted-foreground">{artist.followers} followers</p> */}
+                    </div>
+                    <Button size="sm" className="w-full">
+                        Follow
+                    </Button>
+                </CardContent>
+            </Card>
+        </>
+    )
+}
+
+export default ArtistCard
